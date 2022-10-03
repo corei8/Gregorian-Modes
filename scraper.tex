@@ -1,0 +1,30 @@
+import re
+import os
+from icecream import ic
+
+dir = "."
+
+def latexify(data:str, name:str) -> str:
+	for line in data:
+		re.sub(
+			r"/(<span style='float:left;width:25pt;text-align:right;'>)\d(\.&nbsp;<\/span>)/gm",
+			"", line)
+		re.sub(r"(<i>)", r'\textit{', line)
+		re.sub(r"(<\/i>)", '}', line)
+		re.sub(r"(<b>)", r'\textbf{', line)
+		re.sub(r"(<\/b>)", '}', line)
+		re.sub(r"(<\/br>)", r'\\', line)
+	newname = name.split(".")[0] + ".tex"
+	with open(dir + "/" + newname, "w") as f:
+		for line in data:
+			f.write(line)
+	return 0
+
+for filename in os.listdir(dir):
+	if filename.endswith(".gabc"):
+		pass
+	else:
+		with open(filename, "r") as f:
+			data = f.readlines()
+			ic(filename)
+			latexify(data, filename)
